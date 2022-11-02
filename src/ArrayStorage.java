@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 /**
  * Array based storage for Resumes
  */
@@ -22,7 +24,7 @@ public class ArrayStorage {
                 storage[i] = r;
                 return;
             }
-            if (storage[i].toString() == r.toString()) {
+            if (Objects.equals(storage[i].toString(), r.toString())) {
                 // found a duplicate
                 System.out.println("ERROR: Resume with " + storage[i].toString() + " is already exist!");
                 return;
@@ -34,14 +36,13 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        int n = storage.length;
-        for (int i = 0; i < n; i++) {
-            if (storage[i] == null) {
+        for (Resume resume : storage) {
+            if (resume == null) {
                 break;
             }
-            if (storage[i].toString() == uuid) {
+            if (resume.toString().equals(uuid)) {
                 // found uuid
-                return storage[i];
+                return resume;
             }
         }
 
@@ -59,7 +60,7 @@ public class ArrayStorage {
                 System.out.println("ERROR: Uuid " + uuid + " not found");
                 return;
             }
-            if (storage[i].toString() == uuid) {
+            if (storage[i].toString().equals(uuid)) {
                 // found uuid
                 storage[i] = null;
                 j = i + 1;
@@ -88,18 +89,15 @@ public class ArrayStorage {
      */
     Resume[] getAll() {
         int n = size();
-        Resume[] storagenew = new Resume[n];
-        for (int i = 0; i < n; i++) {
-            storagenew[i] = storage[i];
-        }
-        return storagenew;
+        Resume[] storage1 = new Resume[n];
+        System.arraycopy(storage, 0, storage1, 0, n);
+        return storage1;
     }
 
     int size() {
         int len = 0;
-        int n = storage.length;
-        for (int i = 0; i < n; i++) {
-            if (storage[i] == null) {
+        for (Resume resume : storage) {
+            if (resume == null) {
                 break;
             }
             len++;
