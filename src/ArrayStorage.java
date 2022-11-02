@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -6,43 +7,38 @@ import java.util.Objects;
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
 
+    int size = 0;
+
     void clear() {
-        int n = storage.length;
-        for (int i = 0; i < n; i++) {
-            if (storage[i] == null) {
-                break;
-            }
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
+        size = 0;
     }
 
     void save(Resume r) {
-        int n = storage.length;
-        for (int i = 0; i < n; i++) {
-            if (storage[i] == null) {
-                // found an empty slot
-                storage[i] = r;
-                return;
+        if (size == storage.length) {
+            // storage full
+            System.out.println("ERROR: Storage full");
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (Objects.equals(storage[i].toString(), r.toString())) {
+                    // found a duplicate
+                    System.out.println("ERROR: Resume with uuid " + storage[i].toString() + " is already exist!");
+                    return;
+                }
             }
-            if (Objects.equals(storage[i].toString(), r.toString())) {
-                // found a duplicate
-                System.out.println("ERROR: Resume with " + storage[i].toString() + " is already exist!");
-                return;
-            }
+            storage[size] = r;
+            size++;
+            System.out.println("Resume " + r.toString() + " saved");
         }
-
-        // storage full
-        System.out.println("ERROR: Storage full");
     }
 
     Resume get(String uuid) {
-        for (Resume resume : storage) {
-            if (resume == null) {
-                break;
-            }
-            if (resume.toString().equals(uuid)) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].toString().equals(uuid)) {
                 // found uuid
-                return resume;
+                return storage[i];
             }
         }
 
@@ -52,14 +48,8 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int n = storage.length;
         int j = 0;
-        for (int i = 0; i < n; i++) {
-            if (storage[i] == null) {
-                // uuid not found
-                System.out.println("ERROR: Uuid " + uuid + " not found");
-                return;
-            }
+        for (int i = 0; i < size; i++) {
             if (storage[i].toString().equals(uuid)) {
                 // found uuid
                 storage[i] = null;
@@ -74,13 +64,12 @@ public class ArrayStorage {
             return;
         }
 
-        for (int k = j; k < n; k++) {
-            if (storage[k] == null) {
-                return;
-            }
+        for (int k = j; k < size; k++) {
             storage[k - 1] = storage[k];
             storage[k] = null;
         }
+
+        size--;
         System.out.println("Uuid " + uuid + " deleted");
     }
 
@@ -88,20 +77,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int n = size();
-        Resume[] storage1 = new Resume[n];
-        System.arraycopy(storage, 0, storage1, 0, n);
-        return storage1;
+        return Arrays.copyOf(storage, size);
     }
 
     int size() {
-        int len = 0;
-        for (Resume resume : storage) {
-            if (resume == null) {
-                break;
-            }
-            len++;
-        }
-        return len;
+        return size;
     }
 }
