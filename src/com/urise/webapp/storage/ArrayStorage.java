@@ -9,22 +9,14 @@ import java.util.Objects;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    static final int STORAGE_LIMIT = 10000;
+    static protected final int STORAGE_LIMIT = 10000;
+
     private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
     public void clear() {
-        Arrays.fill(storage, 0, size - 1, null);
+        Arrays.fill(storage, 0, size , null);
         size = 0;
-    }
-
-    public int findIndex(String uuid) {
-        for (int index = 0; index < size; index++) {
-            if (Objects.equals(storage[index].getUuid(), uuid)) {
-                return index;
-            }
-        }
-        return -1;
     }
 
     public void update(Resume r) {
@@ -81,5 +73,14 @@ public class ArrayStorage {
 
     public int size() {
         return size;
+    }
+
+    private int findIndex(String uuid) {
+        for (int index = 0; index < size; index++) {
+            if (Objects.equals(storage[index].getUuid(), uuid)) {
+                return index;
+            }
+        }
+        return -1;
     }
 }
