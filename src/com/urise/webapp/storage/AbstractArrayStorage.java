@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -20,8 +23,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("ERROR: Uuid " + uuid + " not found");
-            return null;
+            throw new NotExistStorageException(uuid);
         } else {
             return storage[index];
         }
@@ -39,36 +41,32 @@ public abstract class AbstractArrayStorage implements Storage {
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
         if (index < 0) {
-            System.out.println("ERROR: Uuid " + r.getUuid() + " not found");
+            throw new NotExistStorageException(r.getUuid());
         } else {
             storage[index] = r;
-            System.out.println("Resume " + r.getUuid() + " updated");
         }
     }
 
     public void save(Resume r) {
         if (size == STORAGE_LIMIT) {
-            System.out.println("ERROR: Storage full");
-            return;
+            throw new StorageException("Storage overflow", r.getUuid());
         }
         int index = getIndex(r.getUuid());
         if (index < 0) {
             saveByIndex(r, index);
             size++;
-            System.out.println("Resume " + r.getUuid() + " saved");
         } else {
-            System.out.println("ERROR: Resume with uuid " + r.getUuid() + " is already exist!");
+            throw new ExistStorageException(r.getUuid());
         }
     }
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("ERROR: Uuid " + uuid + " not found");
+            throw new NotExistStorageException(uuid);
         } else {
             deleteByIndex(index);
             size--;
-            System.out.println("Uuid " + uuid + " deleted");
         }
     }
 
