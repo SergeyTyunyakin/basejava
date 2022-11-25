@@ -28,7 +28,7 @@ abstract class AbstractArrayStorageTest {
     }
 
     @BeforeEach
-    public void initStorage() throws Exception {
+    public void initStorage() {
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
@@ -64,13 +64,14 @@ abstract class AbstractArrayStorageTest {
     void clear() {
         storage.clear();
         assertSize(0);
+        assertArrayEquals(new Resume[]{}, storage.getAll());
     }
 
     @Test
     void update() {
         Resume newResume = new Resume(UUID_2);
         storage.update(newResume);
-        assertSame(storage.get(newResume.getUuid()), newResume);
+        assertSame(storage.get(UUID_2), newResume);
     }
 
     @Test
@@ -90,7 +91,8 @@ abstract class AbstractArrayStorageTest {
     @Test
     void checkStorageOverflow() {
         try {
-            for (int i = storage.size(); i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+            storage.clear();
+            for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
                 storage.save(new Resume());
             }
         } catch (Exception e) {
