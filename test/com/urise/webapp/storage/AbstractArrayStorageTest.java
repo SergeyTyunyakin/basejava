@@ -15,10 +15,10 @@ abstract class AbstractArrayStorageTest {
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
     private static final String DUMMY_UUID = "dummy";
-    private static final Resume RESUME_1;
-    private static final Resume RESUME_2;
-    private static final Resume RESUME_3;
-    private static final Resume RESUME_4;
+    protected static final Resume RESUME_1;
+    protected static final Resume RESUME_2;
+    protected static final Resume RESUME_3;
+    protected static final Resume RESUME_4;
 
     static {
         RESUME_1 = new Resume(UUID_1);
@@ -27,7 +27,7 @@ abstract class AbstractArrayStorageTest {
         RESUME_4 = new Resume(UUID_4);
     }
 
-    private final Storage storage;
+    protected final Storage storage;
     protected int initialSize;
 
     public AbstractArrayStorageTest(Storage storage) {
