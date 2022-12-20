@@ -1,8 +1,6 @@
 package com.urise.webapp.model;
 
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -12,6 +10,8 @@ public class Resume {
 
     private final String uuid;
     private final String fullName;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -23,6 +23,31 @@ public class Resume {
         this.uuid = uuid;
         this.fullName = fullName;
     }
+
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
+    }
+
+    public void addContact(ContactType contactType, String val) {
+        contacts.put(contactType, val);
+    }
+
+    public void addSection(SectionType sectionType, AbstractSection abstractSection) {
+        sections.put(sectionType, abstractSection);
+    }
+
 
     @Override
     public String toString() {

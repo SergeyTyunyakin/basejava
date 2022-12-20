@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -30,38 +30,38 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         return getIndex(uuid);
     }
 
     @Override
-    protected void doUpdate(Resume r, Object objectKey) {
-        storage[(Integer) objectKey] = r;
+    protected void doUpdate(Resume r, Integer objectKey) {
+        storage[objectKey] = r;
     }
 
     @Override
-    protected boolean isExist(Object objectKey) {
-        return (Integer) objectKey >= 0;
+    protected boolean isExist(Integer objectKey) {
+        return objectKey >= 0;
     }
 
     @Override
-    protected void doSave(Resume r, Object objectKey) {
+    protected void doSave(Resume r, Integer objectKey) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         } else {
-            saveByIndex(r, (Integer) objectKey);
+            saveByIndex(r, objectKey);
             size++;
         }
     }
 
     @Override
-    protected Resume doGet(Object objectKey) {
-        return storage[(Integer) objectKey];
+    protected Resume doGet(Integer objectKey) {
+        return storage[objectKey];
     }
 
     @Override
-    protected void doDelete(Object objectKey) {
-        deleteByIndex((Integer) objectKey);
+    protected void doDelete(Integer objectKey) {
+        deleteByIndex(objectKey);
         storage[size - 1] = null;
         size--;
     }
