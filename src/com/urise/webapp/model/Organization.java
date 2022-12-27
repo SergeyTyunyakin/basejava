@@ -1,29 +1,39 @@
 package com.urise.webapp.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class Organization {
-    private final String title;
-    private final String description;
-    private final Link homePage;
-    private final LocalDate dateFrom;
-    private final LocalDate dateTo;
+public class Organization implements Comparable<Organization>, Serializable {
+    private final Link link;
+    private final List<Period> periods = new ArrayList<>();
 
-    public Organization(String orgName, String title, String description, String url, LocalDate dateFrom, LocalDate dateTo) {
-        Objects.requireNonNull(orgName, "orgName must not be null");
-        Objects.requireNonNull(title, "title must not be null");
-        Objects.requireNonNull(dateFrom, "dateFrom must not be null");
-        Objects.requireNonNull(dateTo, "dateTo must not be null");
-        this.homePage = new Link(orgName, url);
-        this.title = title;
-        this.description = description;
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
+    public Organization(String name, String url, Period... periods) {
+        this(new Link(name, url), new ArrayList<>(List.of(periods)));
     }
 
-    public String getTitle() {
-        return title;
+    public Organization(Link link, List<Period> periodList) {
+        Objects.requireNonNull(link);
+        Objects.requireNonNull(periodList);
+        this.link = link;
+        this.periods.addAll(periodList);
+    }
+
+    @Override
+    public int compareTo(Organization o) {
+        Objects.requireNonNull(o);
+        return link.getName().compareTo(o.link.getName());
+    }
+
+    public Link getLink() {
+        return link;
+    }
+
+    public List<Period> getPeriods() {
+        return periods;
     }
 
     @Override
@@ -31,31 +41,106 @@ public class Organization {
         if (this == o) return true;
         if (!(o instanceof Organization that)) return false;
 
-        if (!title.equals(that.title)) return false;
-        if (!Objects.equals(description, that.description)) return false;
-        if (!homePage.equals(that.homePage)) return false;
-        if (!dateFrom.equals(that.dateFrom)) return false;
-        return dateTo.equals(that.dateTo);
+        if (!Objects.equals(link, that.link)) return false;
+        return periods.equals(that.periods);
     }
 
     @Override
     public int hashCode() {
-        int result = title.hashCode();
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + homePage.hashCode();
-        result = 31 * result + dateFrom.hashCode();
-        result = 31 * result + dateTo.hashCode();
+        int result = link != null ? link.hashCode() : 0;
+        result = 31 * result + periods.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "Organization{" +
-                "name='" + homePage.getName() + '\'' +
-                ", dateFrom=" + dateFrom +
-                ", dateTo=" + dateTo +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        var stringList = new ArrayList<String>(6);
+        stringList.add(link.getName());
+        if (link.getUrl() != null) {
+            stringList.add(link.getUrl());
+        }
+        for (var period : periods) {
+            var dateInterval = new StringBuilder();
+            dateInterval.append(String.format("С %s", YearMonth.from(period.getDateFrom())));
+            if (period.getDateTo() != LocalDate.MAX) {
+                dateInterval.append(String.format(" по %s", YearMonth.from(period.getDateTo())));
+            } else {
+                dateInterval.append(" по сейчас");
+            }
+            if (!dateInterval.isEmpty()) {
+                stringList.add(dateInterval.toString());
+            }
+            if (period.getTitle() != null) {
+                stringList.add(period.getTitle());
+            }
+            if (period.getDescription() != null) {
+                stringList.add(period.getDescription());
+            }
+        }
+        return String.join("\n", stringList);
+    }
+
+    public static class Period implements Comparable<Period>, Serializable {
+
+        private final LocalDate dateFrom;
+        private final LocalDate dateTo;
+        private final String title;
+        private final String description;
+
+        public Period(LocalDate dateFrom, LocalDate dateTo, String title, String description) {
+            Objects.requireNonNull(dateFrom);
+            Objects.requireNonNull(dateTo);
+            Objects.requireNonNull(title);
+            this.dateFrom = dateFrom;
+            this.dateTo = dateTo;
+            this.title = title;
+            this.description = description;
+        }
+
+        public Period(LocalDate dateFrom, String title, String description) {
+            this(dateFrom, LocalDate.MAX, title, description);
+        }
+
+        public Period(LocalDate dateFrom, LocalDate dateTo, String title) {
+            this(dateFrom, dateTo, title, null);
+        }
+
+        public LocalDate getDateFrom() {
+            return dateFrom;
+        }
+
+        public LocalDate getDateTo() {
+            return dateTo;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Period period)) return false;
+            return Objects.equals(dateFrom, period.dateFrom) && Objects.equals(dateTo, period.dateTo) && Objects.equals(title, period.title) && Objects.equals(description, period.description);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(dateFrom, dateTo, title, description);
+        }
+
+        @Override
+        public String toString() {
+            return "dateFrom=" + dateFrom + ", dateTo=" + dateTo + ", title='" + title + '\'' + ", description='" + description + '\'';
+        }
+
+        @Override
+        public int compareTo(Period period) {
+            return period.dateFrom.compareTo(dateFrom);
+        }
     }
 }
