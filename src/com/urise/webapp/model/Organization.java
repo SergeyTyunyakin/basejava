@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Organization implements Comparable<Organization>, Serializable {
+    private static final long serialVersionUID = 1L;
     private final Link link;
     private final List<Period> periods = new ArrayList<>();
 

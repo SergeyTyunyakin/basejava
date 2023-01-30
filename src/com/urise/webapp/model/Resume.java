@@ -1,11 +1,14 @@
 package com.urise.webapp.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
-public class Resume {
+public class Resume implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     public static final Comparator<Resume> COMPARE_BY_NAME = Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
     private final String uuid;
