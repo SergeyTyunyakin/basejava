@@ -1,5 +1,10 @@
 package com.urise.webapp.model;
 
+import com.urise.webapp.util.LocalDateAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -7,10 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Comparable<Organization>, Serializable {
     private static final long serialVersionUID = 1L;
-    private final Link link;
+
+    private Link link;
     private final List<Period> periods = new ArrayList<>();
+
+    public Organization() {
+    }
 
     public Organization(String name, String url, Period... periods) {
         this(new Link(name, url), new ArrayList<>(List.of(periods)));
@@ -23,6 +33,10 @@ public class Organization implements Comparable<Organization>, Serializable {
         this.periods.addAll(periodList);
     }
 
+    public void addPeriod(Period period) {
+        periods.add(period);
+    }
+
     @Override
     public int compareTo(Organization o) {
         Objects.requireNonNull(o);
@@ -31,6 +45,10 @@ public class Organization implements Comparable<Organization>, Serializable {
 
     public Link getLink() {
         return link;
+    }
+
+    public void setLink(Link link) {
+        this.link = link;
     }
 
     public List<Period> getPeriods() {
@@ -81,12 +99,18 @@ public class Organization implements Comparable<Organization>, Serializable {
         return String.join("\n", stringList);
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Comparable<Period>, Serializable {
 
-        private final LocalDate dateFrom;
-        private final LocalDate dateTo;
-        private final String title;
-        private final String description;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate dateFrom;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate dateTo;
+        private String title;
+        private String description;
+
+        public Period() {
+        }
 
         public Period(LocalDate dateFrom, LocalDate dateTo, String title, String description) {
             Objects.requireNonNull(dateFrom);
@@ -120,6 +144,22 @@ public class Organization implements Comparable<Organization>, Serializable {
 
         public String getDescription() {
             return description;
+        }
+
+        public void setDateFrom(LocalDate dateFrom) {
+            this.dateFrom = dateFrom;
+        }
+
+        public void setDateTo(LocalDate dateTo) {
+            this.dateTo = dateTo;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
         }
 
         @Override

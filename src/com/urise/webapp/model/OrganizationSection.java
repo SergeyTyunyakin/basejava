@@ -1,8 +1,12 @@
 package com.urise.webapp.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OrganizationSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
     private List<Organization> organizations = new ArrayList<>();
@@ -16,6 +20,10 @@ public class OrganizationSection extends AbstractSection {
 
     public void addItem(Organization org) {
         organizations.add(org);
+    }
+
+    public List<Organization> getItems() {
+        return organizations;
     }
 
     @Override

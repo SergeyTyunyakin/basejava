@@ -1,18 +1,24 @@
 package com.urise.webapp.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final Comparator<Resume> COMPARE_BY_NAME = Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
 
-    private final String uuid;
-    private final String fullName;
+    private String uuid;
+    private String fullName;
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
@@ -25,6 +31,9 @@ public class Resume implements Serializable {
         Objects.requireNonNull(fullName, "fullName must be not null");
         this.uuid = uuid;
         this.fullName = fullName;
+    }
+
+    public Resume() {
     }
 
     public String getContact(ContactType type) {
@@ -60,18 +69,22 @@ public class Resume implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Resume resume)) return false;
 
-        Resume resume = (Resume) o;
-
-        if (!Objects.equals(uuid, resume.uuid)) return false;
-        return Objects.equals(fullName, resume.fullName);
+        if (getUuid() != null ? !getUuid().equals(resume.getUuid()) : resume.getUuid() != null) return false;
+        if (getFullName() != null ? !getFullName().equals(resume.getFullName()) : resume.getFullName() != null)
+            return false;
+        if (getContacts() != null ? !getContacts().equals(resume.getContacts()) : resume.getContacts() != null)
+            return false;
+        return getSections() != null ? getSections().equals(resume.getSections()) : resume.getSections() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = uuid != null ? uuid.hashCode() : 0;
-        result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
+        int result = getUuid() != null ? getUuid().hashCode() : 0;
+        result = 31 * result + (getFullName() != null ? getFullName().hashCode() : 0);
+        result = 31 * result + (getContacts() != null ? getContacts().hashCode() : 0);
+        result = 31 * result + (getSections() != null ? getSections().hashCode() : 0);
         return result;
     }
 

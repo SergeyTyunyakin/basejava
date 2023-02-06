@@ -1,10 +1,24 @@
 package com.urise.webapp.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
+import java.io.Serial;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TextSection extends AbstractSection {
+    @Serial
     private static final long serialVersionUID = 1L;
-    final private String text;
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    private String text;
+
+    public TextSection() {
+    }
 
     public TextSection(String text) {
         this.text = text;

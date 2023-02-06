@@ -21,7 +21,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     protected SerializationStrategy strategy;
 
-    protected PathStorage(String dir, SerializationStrategy strategy) {
+    public PathStorage(String dir, SerializationStrategy strategy) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -96,7 +96,7 @@ public class PathStorage extends AbstractStorage<Path> {
         this.strategy = strategy;
     }
 
-    public Stream<Path> getFilesList() {
+    private Stream<Path> getFilesList() {
         try {
             return Files.list(directory);
         } catch (IOException e) {
