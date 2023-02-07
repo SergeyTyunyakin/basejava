@@ -82,8 +82,8 @@ public class ResumeTestData {
         period2 = new Organization.Period(
                 DateUtil.of(1984, Month.SEPTEMBER),
                 DateUtil.of(1986, Month.JUNE),
-                "Закончил с отличием",
-                "");
+                "Закончил с отличием"
+        );
         org2.addItem(new Organization(link2, List.of(new Organization.Period[]{period2})));
 
         return r;

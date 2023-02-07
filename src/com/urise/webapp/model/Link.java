@@ -22,6 +22,11 @@ public class Link implements Serializable {
         this.url = url;
     }
 
+    public Link(String name) {
+        Objects.requireNonNull(name, "Link name must not be null");
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

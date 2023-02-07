@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DataStreamSerializer implements SerializationStrategy {
+    private final String NULL_STR = "NULL_STR";
+
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -31,12 +33,12 @@ public class DataStreamSerializer implements SerializationStrategy {
                     case EXPERIENCE, EDUCATION -> {
                         writeCollection(dos, ((OrganizationSection) section.getValue()).getItems(), organization -> {
                             dos.writeUTF(organization.getLink().getName());
-                            dos.writeUTF(organization.getLink().getUrl());
+                            writeUTFWithNull(dos, organization.getLink().getUrl());
                             writeCollection(dos, organization.getPeriods(), period -> {
                                 dos.writeUTF(period.getDateFrom().toString());
                                 dos.writeUTF(period.getDateTo().toString());
                                 dos.writeUTF(period.getTitle());
-                                dos.writeUTF(period.getDescription());
+                                writeUTFWithNull(dos, period.getDescription());
                             });
                         });
                     }
@@ -69,7 +71,7 @@ public class DataStreamSerializer implements SerializationStrategy {
                         OrganizationSection section = new OrganizationSection();
                         readCollection(dis, () -> {
                             Organization org = new Organization();
-                            Link link = new Link(dis.readUTF(), dis.readUTF());
+                            Link link = new Link(dis.readUTF(), readUTFWithNull(dis));
                             org.setLink(link);
 
                             readCollection(dis, () -> {
@@ -77,7 +79,7 @@ public class DataStreamSerializer implements SerializationStrategy {
                                 period.setDateFrom(LocalDate.parse(dis.readUTF()));
                                 period.setDateTo(LocalDate.parse(dis.readUTF()));
                                 period.setTitle(dis.readUTF());
-                                period.setDescription(dis.readUTF());
+                                period.setDescription(readUTFWithNull(dis));
                                 org.addPeriod(period);
                             });
                             section.addItem(org);
@@ -93,6 +95,24 @@ public class DataStreamSerializer implements SerializationStrategy {
             return resume;
         }
     }
+
+    protected void writeUTFWithNull(DataOutputStream dos, String str) throws IOException {
+        if (str == null) {
+            dos.writeUTF(NULL_STR);
+        } else {
+            dos.writeUTF(str);
+        }
+    }
+
+    protected String readUTFWithNull(DataInputStream dis) throws IOException {
+        String str = dis.readUTF();
+        if (str.equals(NULL_STR)) {
+            return null;
+        } else {
+            return str;
+        }
+    }
+
 
     private interface Reader<E> {
         E readElement() throws IOException;
