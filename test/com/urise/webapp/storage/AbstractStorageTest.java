@@ -9,15 +9,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
 
     private static final String DUMMY_UUID = "dummy";
     protected static final Resume RESUME_1;
@@ -89,8 +90,7 @@ public class AbstractStorageTest {
 
     @Test
     public void updateNotExist() {
-        Resume newResume = new Resume("New Name");
-        assertThrows(NotExistStorageException.class, () -> storage.update(newResume));
+        assertThrows(NotExistStorageException.class, () -> storage.update(new Resume()));
     }
 
     @Test

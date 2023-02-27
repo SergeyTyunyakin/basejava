@@ -39,11 +39,10 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume r) {
         sqlHelper.transactionExecute((conn) -> {
-            try (PreparedStatement ps = conn.prepareStatement("UPDATE resume r SET full_name = ? WHERE r.uuid =? RETURNING uuid, full_name")) {
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE resume r SET full_name = ? WHERE r.uuid =?")) {
                 ps.setString(1, r.getFullName());
                 ps.setString(2, r.getUuid());
-                ResultSet rs = ps.executeQuery();
-                if (!rs.next()) {
+                if (ps.executeUpdate() == 0) {
                     throw new NotExistStorageException(r.getUuid());
                 }
             }
@@ -57,7 +56,7 @@ public class SqlStorage implements Storage {
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, r.getFullName());
-                ps.executeUpdate();
+                ps.execute();
             }
             return null;
         });
@@ -80,10 +79,10 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         return sqlHelper.transactionExecute((conn) -> {
             List<Resume> resultList = new ArrayList<Resume>();
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r ORDER BY uuid")) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r ORDER BY full_name, uuid")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    resultList.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
+                    resultList.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
                 }
             }
             return resultList;
