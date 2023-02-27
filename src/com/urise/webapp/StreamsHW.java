@@ -30,7 +30,10 @@ public class StreamsHW {
     }
 
     public static int minValue(int[] values) {
-        return Arrays.stream(values).sorted().distinct().reduce(0, (acc, element) -> acc * 10 + element);
+        return Arrays.stream(values)
+                .sorted()
+                .distinct()
+                .reduce(0, (acc, element) -> acc * 10 + element);
     }
 
     public static List<Integer> oddOrEven(List<Integer> integers) {
@@ -56,7 +59,7 @@ public class StreamsHW {
     }
 
     public static List<Integer> oddOrEven3(List<Integer> integers) {
-        Map<Boolean, List<Integer>> map = integers.stream().collect(Collectors.groupingBy(i -> i.intValue() % 2 == 0));
+        Map<Boolean, List<Integer>> map = integers.stream().collect(Collectors.partitioningBy(i -> i.intValue() % 2 == 0));
         return ((map.get(false).size() % 2) != 0) ? map.get(true) : map.get(false);
     }
 

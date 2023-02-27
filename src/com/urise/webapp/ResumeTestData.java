@@ -1,10 +1,6 @@
 package com.urise.webapp;
 
-import com.urise.webapp.model.*;
-import com.urise.webapp.util.DateUtil;
-
-import java.time.Month;
-import java.util.List;
+import com.urise.webapp.model.Resume;
 
 public class ResumeTestData {
 
@@ -27,7 +23,7 @@ public class ResumeTestData {
 
     public static Resume createResume(String uuid, String fullName) {
         Resume r = new Resume(uuid, fullName);
-
+/*
         r.addContact(ContactType.PHONE, "+7(921) 855-0482");
         r.addContact(ContactType.SKYPE, "skype:grigory.kislin");
         r.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -85,7 +81,7 @@ public class ResumeTestData {
                 "Закончил с отличием"
         );
         org2.addItem(new Organization(link2, List.of(new Organization.Period[]{period2})));
-
+*/
         return r;
     }
 
