@@ -1,5 +1,6 @@
 package com.urise.webapp;
 
+import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 
 public class ResumeTestData {
@@ -23,7 +24,7 @@ public class ResumeTestData {
 
     public static Resume createResume(String uuid, String fullName) {
         Resume r = new Resume(uuid, fullName);
-/*
+
         r.addContact(ContactType.PHONE, "+7(921) 855-0482");
         r.addContact(ContactType.SKYPE, "skype:grigory.kislin");
         r.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -31,7 +32,7 @@ public class ResumeTestData {
         r.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         r.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
         r.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
-
+/*
         r.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         r.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
 
