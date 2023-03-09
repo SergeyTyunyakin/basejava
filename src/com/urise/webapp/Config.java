@@ -9,7 +9,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-    private static final File PROPS = new File("config\\resumes.properties");
+    private static final String PROJECT_PATH = "C:/WORK/Java/Projects/basejava/";
+    private static final File PROPS = new File(PROJECT_PATH + "config/resumes.properties");
     private static final Config INSTANCE = new Config();
 
     private Properties props = new Properties();
@@ -37,4 +38,5 @@ public class Config {
     public SqlStorage getSqlStorage() {
         return sqlStorage;
     }
+
 }

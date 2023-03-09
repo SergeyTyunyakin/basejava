@@ -1,7 +1,6 @@
 package com.urise.webapp;
 
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 
 public class ResumeTestData {
 
@@ -32,7 +31,7 @@ public class ResumeTestData {
         r.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         r.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
         r.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
-/*
+
         r.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         r.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
 
@@ -48,7 +47,7 @@ public class ResumeTestData {
         item2.addItem("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, MySQL, SQLite, MS SQL, HSQLDB");
 
         r.addSection(SectionType.QUALIFICATIONS, item2);
-
+/*
         OrganizationSection org1 = new OrganizationSection();
         org1.addItem(new Organization("Alcatel",
                 "http://www.alcatel.ru/",
