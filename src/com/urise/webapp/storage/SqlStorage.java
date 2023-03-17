@@ -1,11 +1,14 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.model.*;
+import com.urise.webapp.model.AbstractSection;
+import com.urise.webapp.model.ContactType;
+import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.SectionType;
 import com.urise.webapp.sql.SqlHelper;
+import com.urise.webapp.util.JsonParser;
 
 import java.sql.*;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,12 +161,14 @@ public class SqlStorage implements Storage {
     private void insertSections(Connection conn, Resume r) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<SectionType, AbstractSection> e : r.getSections().entrySet()) {
-                String sectionStrings = switch (e.getKey()) {
-                    case OBJECTIVE, PERSONAL -> ((TextSection) e.getValue()).getText();
-                    case ACHIEVEMENT, QUALIFICATIONS ->
-                            String.join(DELIMITER, ((ListTextSection) e.getValue()).getItems());
-                    default -> null;
-                };
+                var jsonParser = new JsonParser();
+                String sectionStrings = jsonParser.write(e.getValue(), AbstractSection.class);
+                //                String sectionStrings = switch (e.getKey()) {
+//                    case OBJECTIVE, PERSONAL -> ((TextSection) e.getValue()).getText();
+//                    case ACHIEVEMENT, QUALIFICATIONS ->
+//                            String.join(DELIMITER, ((ListTextSection) e.getValue()).getItems());
+//                    default -> null;
+//                };
                 if (sectionStrings != null) {
                     ps.setString(1, r.getUuid());
                     ps.setString(2, e.getKey().name());
@@ -189,19 +194,9 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void addContact(ResultSet rs, Resume r) throws SQLException {
-        String value = rs.getString("value");
-        if (value != null) {
-            r.addContact(ContactType.valueOf(rs.getString("type")), value);
-        }
-    }
-
     private void addSection(ResultSet rs, Resume r) throws SQLException {
         var sectionType = SectionType.valueOf(rs.getString("type"));
-        switch (sectionType) {
-            case ACHIEVEMENT, QUALIFICATIONS ->
-                    r.addSection(sectionType, new ListTextSection(Arrays.stream(rs.getString("value").split(DELIMITER)).toList()));
-            case OBJECTIVE, PERSONAL -> r.addSection(sectionType, new TextSection(rs.getString("value")));
-        }
+        var jsonParser = new JsonParser();
+        r.addSection(sectionType, jsonParser.read(rs.getString("value"), AbstractSection.class));
     }
 }

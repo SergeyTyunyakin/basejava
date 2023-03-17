@@ -1,6 +1,10 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.*;
+import com.urise.webapp.util.DateUtil;
+
+import java.time.Month;
+import java.util.List;
 
 public class ResumeTestData {
 
@@ -47,7 +51,7 @@ public class ResumeTestData {
         item2.addItem("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, MySQL, SQLite, MS SQL, HSQLDB");
 
         r.addSection(SectionType.QUALIFICATIONS, item2);
-/*
+
         OrganizationSection org1 = new OrganizationSection();
         org1.addItem(new Organization("Alcatel",
                 "http://www.alcatel.ru/",
@@ -81,7 +85,7 @@ public class ResumeTestData {
                 "Закончил с отличием"
         );
         org2.addItem(new Organization(link2, List.of(new Organization.Period[]{period2})));
-*/
+
         return r;
     }
 

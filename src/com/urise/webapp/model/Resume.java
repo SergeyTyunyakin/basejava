@@ -96,4 +96,8 @@ public class Resume implements Serializable {
     public String getFullName() {
         return fullName;
     }
+
+    public void setFullName(String fName) {
+        fullName = fName;
+    }
 }

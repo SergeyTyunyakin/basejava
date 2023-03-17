@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,6 +25,21 @@ public class OrganizationSection extends AbstractSection {
 
     public List<Organization> getItems() {
         return organizations;
+    }
+
+    public List<Organization> getSortedItems() {
+        return organizations.stream()
+                .sorted((o1, o2) -> o2
+                        .getPeriods().stream()
+                        .max(Comparator.comparing(Organization.Period::getDateTo))
+                        .get()
+                        .getDateTo()
+                        .compareTo(o1
+                                .getPeriods().stream()
+                                .max(Comparator.comparing(Organization.Period::getDateTo))
+                                .get()
+                                .getDateTo())
+                ).toList();
     }
 
     @Override
