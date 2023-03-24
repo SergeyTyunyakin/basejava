@@ -3,6 +3,7 @@ package com.urise.webapp.web;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.util.Config;
+import com.urise.webapp.util.DateUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
 
 public class ResumeServlet extends HttpServlet {
     private SqlStorage storage;
@@ -29,7 +30,11 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         boolean addNew = Boolean.parseBoolean(request.getParameter("addNew"));
+
         fullName = fullName.strip();
+        if (fullName.isEmpty()) {
+            fullName = "Имя не указано";
+        }
         Resume r;
         if (!addNew) {
             r = storage.get(uuid);
@@ -62,6 +67,9 @@ public class ResumeServlet extends HttpServlet {
                         r.addSection(sectionType, new ListTextSection((Arrays.stream(value.split("\n")).toList())));
             }
         }
+
+        r.getSections().put(SectionType.EXPERIENCE, addOrganizationSection(request, SectionType.EXPERIENCE));
+        r.getSections().put(SectionType.EDUCATION, addOrganizationSection(request, SectionType.EDUCATION));
 
         if (!addNew) {
             storage.update(r);
@@ -104,6 +112,64 @@ public class ResumeServlet extends HttpServlet {
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
+    }
+
+    private OrganizationSection addOrganizationSection(HttpServletRequest request, SectionType processedSectionType) {
+
+        OrganizationSection section = new OrganizationSection();
+        Map<String, String[]> params = request.getParameterMap();
+
+        String[] organizationNames = params.get("orgName");
+        String[] organizationUrls = params.get("orgUrl");
+        String[] sectionTypeNames = params.get("sectionType");
+        String[] periodFrom = params.get("periodFrom");
+        String[] periodTo = params.get("periodTo");
+
+        String[] sectionTypeLink = params.get("parentSectionType");
+        String[] sectionIdLink = params.get("parentSectionId");
+
+        Map<String, List<Integer>> mapSectionIdLink = new HashMap<>();
+
+        for (int i = 0; i < sectionIdLink.length; i++) {
+            if (!sectionTypeLink[i].equals(processedSectionType.name())) {
+                continue;
+            }
+            if (mapSectionIdLink.get(sectionIdLink[i]) == null) {
+                mapSectionIdLink.put(sectionIdLink[i], new ArrayList<>(List.of(i)));
+            } else {
+                mapSectionIdLink.get(sectionIdLink[i]).add(i);
+            }
+        }
+
+        Map<Link, List<Organization.Period>> organizationMap = new HashMap<>(organizationNames.length);
+
+        for (int i = 0; i < organizationNames.length; i++) {
+            if (!sectionTypeNames[i].equals(processedSectionType.name()) ||
+                    organizationNames[i].strip().equals("") && organizationUrls[i].strip().equals("")) {
+                continue;
+            }
+            String organizationName = organizationNames[i].strip();
+            String organizationUrl = organizationUrls[i].strip();
+            Link link = new Link(organizationName, organizationUrl);
+
+            List<Organization.Period> ops = new ArrayList<>();
+            for (var j : mapSectionIdLink.get(params.get("sectionId")[i])) {
+                String organizationTitle = params.get("periodTitle")[j].strip();
+                String organizationDescr = params.get("periodDescription")[j].strip();
+                Organization.Period op = new Organization.Period(
+                        DateUtil.ofBegMon(periodFrom[j]),
+                        DateUtil.ofEndMon(periodTo[j]),
+                        organizationTitle,
+                        organizationDescr);
+                ops.add(op);
+            }
+            organizationMap.put(link, ops);
+        }
+
+        for (var orgEntry : organizationMap.entrySet()) {
+            section.addItem(new Organization(orgEntry.getKey(), orgEntry.getValue()));
+        }
+        return section;
     }
 
     public static ServletContext getContext() {

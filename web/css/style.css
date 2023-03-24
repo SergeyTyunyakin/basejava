@@ -24,9 +24,10 @@ footer {
     text-align: center;
 }
 
-ar {
-    font: 150% sans-serif;
+.ar {
+    font: 100% sans-serif;
     font-weight: bold;
+    margin-top: 10px;
 }
 
 dl {
@@ -169,11 +170,20 @@ a[href*="github."] {
     line-height: 25px;
 }
 
+.period-title {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 25px;
+}
+
 .description {
     font-weight: 300;
     font-size: 18px;
     line-height: 25px;
-    margin: 35px 0 0 207px;
+    margin-top: 10px;
+    margin-right: 0;
+    margin-left: 207px;
+    margin-bottom: 5px;
 }
 
 .section-wrapper {
@@ -237,9 +247,17 @@ input {
     margin: 20px 0 0 0;
 }
 
-textarea {
-    height: 80px;
-    width: 100%;
+.orgurlwithbutton {
+    display: inline-flex;
+}
+
+.orgurl {
+    width: 80%;
+}
+
+.inputperiod {
+    height: 60px;
+    width: 180px;
     background: #F8F9FA;
     border: 0;
     border-radius: 10px;
@@ -248,8 +266,18 @@ textarea {
     margin: 20px 0 0 0;
 }
 
-button {
+textarea {
+    height: 100px;
+    width: 100%;
+    background: #F8F9FA;
+    border: 0;
+    border-radius: 10px;
+    box-shadow: 0 0 50px 0 #E0E4EA inset;
+    padding: 25px 25px 25px 25px;
+    margin: 20px 0 0 0;
+}
 
+button {
     font-weight: bold;
     font-size: 22px;
     line-height: 19px;
@@ -258,6 +286,10 @@ button {
     margin: 20px 0 10px 0;
     box-sizing: border-box;
     border-radius: 10px;
+}
+
+.period-section {
+    display: inline-block;
 }
 
 .button-section {
@@ -296,4 +328,61 @@ button {
     opacity: 0.8;
     box-shadow: 0 0 10px #319848;
     background: #F8F9FA;
+}
+
+.spacer {
+    width: 100%;
+    min-width: 100%;
+    height: 2px;
+    margin: 40px 0 10px 0;
+    background: #E0E4EA;
+    border-radius: 10px;
+}
+
+.blue-button {
+    width: 250px;
+    margin-left: 0px;
+    margin-right: 10px;
+    color: #F8F9FA;
+    border: 2px solid #96CCFF;
+    background: #96CCFF;
+    font-size: 16px;
+    line-height: 19px;
+    align-items: center;
+    height: 60px;
+}
+
+.blue-button:hover {
+    color: #96CCFF;
+    opacity: 0.8;
+    box-shadow: 0 0 10px #96CCFF;
+    background: #F8F9FA;
+    font-size: 16px;
+    line-height: 19px;
+    align-items: center;
+    height: 60px;
+}
+
+.red-button {
+    width: 250px;
+    margin-left: 10px;
+    margin-right: 0px;
+    color: #F8F9FA;
+    border: 2px solid #B7616A;
+    background: #B7616A;
+    font-size: 16px;
+    line-height: 19px;
+    align-items: center;
+    height: 60px;
+}
+
+.red-button:hover {
+    color: #B7616A;
+    opacity: 0.8;
+    box-shadow: 0 0 10px #B7616A;
+    background: #F8F9FA;
+    font-size: 16px;
+    line-height: 19px;
+    align-items: center;
+    height: 60px;
 }

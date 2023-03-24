@@ -28,7 +28,7 @@
                     <div class="period"><%=DateUtil.toDisplayDateFrom(period.getDateFrom())%>
                         - <%=DateUtil.toDisplayDateTo(period.getDateTo())%>
                     </div>
-                    <div class="position"><%=(period.getTitle() == null) ? "" : period.getTitle()%>
+                    <div class="period-title"><%=(period.getTitle() == null) ? "" : period.getTitle()%>
                     </div>
                 </div>
                 <div class="description"><%=(period.getDescription() == null) ? "" : period.getDescription()%>
