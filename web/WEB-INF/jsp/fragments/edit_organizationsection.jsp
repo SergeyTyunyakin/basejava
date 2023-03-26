@@ -93,11 +93,11 @@
                         период
                     </button>
                     <div id="insertPeriod<%=sectionId%>">
-                        <% perId++; %>
-                        <%String periodId = sectionId + '_' + perId;%>
-                        <div id="<%=periodId%>">
-                            <c:forEach items="${item.getPeriods()}" var="period">
-                                <jsp:useBean id="period" type="com.urise.webapp.model.Organization.Period"/>
+                        <c:forEach items="${item.getPeriods()}" var="period">
+                            <jsp:useBean id="period" type="com.urise.webapp.model.Organization.Period"/>
+                            <% perId++; %>
+                            <%String periodId = sectionId + '_' + perId;%>
+                            <div id="<%=periodId%>">
                                 <input type="hidden" name="parentSectionId" value="<%=sectionId%>">
                                 <input type="hidden" name="parentSectionType" value="<%=sectionType%>">
                                 <div class="period-section" id="period<%=periodId%>">
@@ -121,8 +121,8 @@
                                     <textarea name="periodDescription" rows=3 cols="60"
                                               placeholder="Описание"><%=(period.getDescription() == null) ? "" : period.getDescription()%></textarea>
                                 </div>
-                            </c:forEach>
-                        </div>
+                            </div>
+                        </c:forEach>
                     </div>
                     <div class="spacer"></div>
                 </div>

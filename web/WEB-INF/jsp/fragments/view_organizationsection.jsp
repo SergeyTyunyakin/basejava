@@ -18,7 +18,8 @@
         <div class="section-wrapper">
             <jsp:useBean id="item" type="com.urise.webapp.model.Organization"/>
             <div class="job-name"><a class="contact-link"
-                                     href="<%=item.getLink().getUrl()%>" target="_blank"><%=item.getLink().getName()%>
+                    <%=(item.getLink().getUrl() == null || item.getLink().getUrl().equals("")) ? "" : "href=\"" + item.getLink().getUrl() + '"'%>
+                                     target="_blank"><%=item.getLink().getName()%>
             </a>
             </div>
             <c:forEach items="${item.getPeriods()}" var="period">

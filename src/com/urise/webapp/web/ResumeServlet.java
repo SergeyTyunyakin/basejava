@@ -63,8 +63,9 @@ public class ResumeServlet extends HttpServlet {
             value = value.strip();
             switch (sectionType) {
                 case OBJECTIVE, PERSONAL -> r.addSection(sectionType, new TextSection(value));
-                case ACHIEVEMENT, QUALIFICATIONS ->
-                        r.addSection(sectionType, new ListTextSection((Arrays.stream(value.split("\n")).toList())));
+                case ACHIEVEMENT, QUALIFICATIONS -> {
+                    r.addSection(sectionType, new ListTextSection(List.of(Arrays.stream(value.split("\n")).filter(e -> e.trim().length() > 0).toArray(String[]::new))));
+                }
             }
         }
 
@@ -153,15 +154,19 @@ public class ResumeServlet extends HttpServlet {
             Link link = new Link(organizationName, organizationUrl);
 
             List<Organization.Period> ops = new ArrayList<>();
-            for (var j : mapSectionIdLink.get(params.get("sectionId")[i])) {
-                String organizationTitle = params.get("periodTitle")[j].strip();
-                String organizationDescr = params.get("periodDescription")[j].strip();
-                Organization.Period op = new Organization.Period(
-                        DateUtil.ofBegMon(periodFrom[j]),
-                        DateUtil.ofEndMon(periodTo[j]),
-                        organizationTitle,
-                        organizationDescr);
-                ops.add(op);
+            if (mapSectionIdLink.get(params.get("sectionId")[i]) != null) {
+                for (var j : mapSectionIdLink.get(params.get("sectionId")[i])) {
+                    String organizationTitle = params.get("periodTitle")[j].strip();
+                    String organizationDescr = params.get("periodDescription")[j].strip();
+                    Organization.Period op = new Organization.Period(
+                            DateUtil.ofBegMon(periodFrom[j]),
+                            DateUtil.ofEndMon(periodTo[j]),
+                            organizationTitle,
+                            organizationDescr);
+                    if (periodFrom[j] != "") {
+                        ops.add(op);
+                    }
+                }
             }
             organizationMap.put(link, ops);
         }
